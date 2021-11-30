@@ -3,3 +3,6 @@
 
 # Data
 data/samples/
+
+# Python
+__pycache__/
