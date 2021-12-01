@@ -37,6 +37,9 @@ def load_file_as_dataframe(file: io.BytesIO, file_type: str = None) -> pd.DataFr
         "Mime file type recognized as unsupported!", recognized file type is unsupported.
     """
     if file_type:
+        if not isinstance(file, io.BytesIO):
+            file = io.BytesIO(file)
+        
         file.seek(0)
         
         if file_type == "csv":

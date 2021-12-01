@@ -18,10 +18,8 @@ app.register_blueprint(dl, url_prefix="/data-loading")
 app.register_blueprint(dc, url_prefix="/data-cleaning")
 
 
-@app.before_first_request
-def before_first_request():
-    print("before_first_request")
-    
+@app.before_request
+def before_request():
     if not "minio" in g:
         # Create and check MinIO connection
         g.minio = Minio(f"{MINIO_HOST}:{MINIO_PORT}", access_key=MINIO_USER,

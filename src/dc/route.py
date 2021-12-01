@@ -9,7 +9,7 @@ from .clean import *
 dc = Blueprint("data-cleaning", __name__)
 
 
-@dc.route("/", methods=["GET"])
+@dc.route("/", methods=["POST"])
 def dc_index():
     # Get input and output paths
     minio_input = request.form.get("minio-input", None)
