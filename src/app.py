@@ -20,17 +20,18 @@ app.register_blueprint(dl, url_prefix="/data-loading")
 def before_first_request():
     print("before_first_request")
     
-    # Create and check MinIO connection
-    g.minio = Minio(f"{MINIO_HOST}:{MINIO_PORT}", access_key=MINIO_USER,
-                    secret_key=MINIO_PASS, secure=False)
-    
-    try:
-        g.minio.list_buckets()
-    except:
-        print("Failed to create connection with MinIO!")
-        exit(1)
-    
-    print("Created successful connection with MinIO!")
+    if not "minio" in g:
+        # Create and check MinIO connection
+        g.minio = Minio(f"{MINIO_HOST}:{MINIO_PORT}", access_key=MINIO_USER,
+                        secret_key=MINIO_PASS, secure=False)
+        
+        try:
+            g.minio.list_buckets()
+        except:
+            print("Failed to create connection with MinIO!")
+            exit(1)
+        
+        print("Created successful connection with MinIO!")
 
 
 if __name__ == "__main__":

@@ -43,6 +43,7 @@ https://repo.anaconda.com/pkgs/main/linux-64/pysocks-1.7.1-py39h06a4308_0.conda
 https://conda.anaconda.org/conda-forge/linux-64/python_abi-3.9-2_cp39.tar.bz2
 https://repo.anaconda.com/pkgs/main/noarch/pytz-2021.3-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/six-1.16.0-pyhd3eb1b0_0.conda
+https://repo.anaconda.com/pkgs/main/linux-64/tabulate-0.8.9-py39h06a4308_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/wheel-0.37.0-pyhd3eb1b0_1.conda
 https://repo.anaconda.com/pkgs/main/noarch/xlrd-2.0.1-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/cffi-1.14.6-py39h400218f_0.conda

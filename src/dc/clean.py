@@ -23,17 +23,18 @@ def drop_null(df: pd.DataFrame, max_shrink: float = 0.2) -> pd.DataFrame:
     pd.DataFrame
         The resulting DataFrame
     """
-    drop_any = df.dropna()
+    x = df.copy(deep=True)
+    drop_any = x.dropna().reset_index(drop=True)
 
-    if 1 - (len(drop_any) / len(df)) <= max_shrink:
+    if 1 - (len(drop_any) / len(x)) <= max_shrink:
         return drop_any
 
-    drop_all = df.dropna(how="all")
+    drop_all = x.dropna(how="all").reset_index(drop=True)
 
-    if 1 - (len(drop_all) / len(df)) <= max_shrink:
+    if 1 - (len(drop_all) / len(x)) <= max_shrink:
         return drop_all
     else:
-        return df
+        return x
 
 
 def handle_object_types(df: pd.DataFrame, column_index: int) -> pd.Series:
@@ -53,26 +54,29 @@ def handle_object_types(df: pd.DataFrame, column_index: int) -> pd.Series:
     pd.Series
         The resulting DataFrame
     """
-    column = df.iloc[:, column_index]
+    x = df.copy(deep=True)
+    column = x.iloc[:, column_index].astype(str)
     column.fillna("null", inplace=True)
     uniques = column.unique()
-    n_uniques = len(uniques)
     keys = {}
     generated = []
+    high = len(column) * 2
 
     for u in uniques:
         if u.isdigit():
             keys[u] = int(u)
         else:
-            keys[u] = generate_number_not_in_list(generated, n_uniques)
+            keys[u] = generate_number_not_in_list(generated, high)
+            generated.append(keys[u])
 
     for k in keys:
         while not k.isdigit() and str(keys[k]) in keys:
-            keys[k] = generate_number_not_in_list(generated, n_uniques)
+            keys[k] = generate_number_not_in_list(generated, high)
+            generated.append(keys[k])
 
-    df.iloc[:, column_index] = column.apply(lambda x: keys[x]).astype(int)
+    x.iloc[:, column_index] = column.map(keys).astype(int)
 
-    return df
+    return x
 
 
 def handle_int_types(df: pd.DataFrame, column_index: int) -> pd.DataFrame:
@@ -92,16 +96,16 @@ def handle_int_types(df: pd.DataFrame, column_index: int) -> pd.DataFrame:
     pd.DataFrame
         The resulting DataFrame
     """ 
-    column = df.iloc[:, column_index]
+    x = df.copy(deep=True)
+    column = x.iloc[:, column_index]
     distribution = column.value_counts(normalize=True)
     nulls = column.isnull()
     column.loc[nulls] = np.random.choice(distribution.index,
                                          size=len(column[nulls]),
                                          p=distribution.values)
-    
-    df.iloc[:, column_index] = column
+    x.iloc[:, column_index] = column
 
-    return df
+    return x
 
 
 def handle_float_types(df: pd.DataFrame, column_index: int) -> pd.DataFrame:
@@ -120,9 +124,10 @@ def handle_float_types(df: pd.DataFrame, column_index: int) -> pd.DataFrame:
     pd.DataFrame
         The resulting DataFrame
     """
-    column = df.iloc[:, column_index]
+    x = df.copy(deep=True)
+    column = x.iloc[:, column_index]
     column = replace_outliers_with_mean(column)
     column.fillna(column.mean(), inplace=True)
-    df.iloc[:, column_index] = column
+    x.iloc[:, column_index] = column
     
-    return df
+    return x

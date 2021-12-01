@@ -4,13 +4,13 @@ import numpy as np
 from scipy.stats import zscore
 
 
-def replace_outliers_with_mean(x: pd.Series) -> pd.Series:
+def replace_outliers_with_mean(df: pd.Series) -> pd.Series:
     """
     Replaces outliers in a Series with the mean value but leaves nulls as is.
 
     Parameters
     ----------
-    x : pd.Series
+    df : pd.Series
         The Series that will be modified
 
     Returns
@@ -18,6 +18,7 @@ def replace_outliers_with_mean(x: pd.Series) -> pd.Series:
     pd.Series
         The resulting Series
     """
+    x = df.copy(deep=True)
     y = x.dropna()
     """
     Any z-score greater than 3 or less than -3 is considered to be an outlier. This rule of thumb is based on the
@@ -29,7 +30,6 @@ def replace_outliers_with_mean(x: pd.Series) -> pd.Series:
     mean = y[(np.abs(zscore(y)) < 3)].mean()
     outliers = y.index[(np.abs(zscore(y)) >= 3)]
     y.iloc[outliers] = mean
-    
     x.update(y)
     
     return x

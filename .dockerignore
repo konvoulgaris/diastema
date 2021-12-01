@@ -6,3 +6,6 @@ data/samples/
 
 # Python
 __pycache__/
+
+# Unit testing
+test/
