@@ -2,10 +2,10 @@
 .vscode/
 
 # Data
-data/samples/
+data/
 
 # Python
 __pycache__/
 
-# Unit testing
+# Tests
 test/
