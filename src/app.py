@@ -4,6 +4,7 @@ from flask import Flask, g
 from minio import Minio
 
 from dl.route import dl
+from dc.route import dc
 
 HOST = os.getenv("HOST", "0.0.0.0")
 PORT = int(os.getenv("PORT", 5000))
@@ -14,6 +15,7 @@ MINIO_PASS = os.getenv("MINIO_PASS", "minioadmin")
 
 app = Flask(__name__)
 app.register_blueprint(dl, url_prefix="/data-loading")
+app.register_blueprint(dc, url_prefix="/data-cleaning")
 
 
 @app.before_first_request
