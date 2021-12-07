@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository 
+      uses: actions/checkout@v2
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v1.10.0
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag konvoulgaris/diastema-daas:latest
+    - name: Push the Docker image
+      run: docker push konvoulgaris/diastema-daas:latest
