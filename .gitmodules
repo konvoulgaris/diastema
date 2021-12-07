@@ -1,0 +1,3 @@
+[submodule "src/diastema-daas-analytics-catalogue"]
+	path = src/diastema-daas-analytics-catalogue
+	url = https://github.com/konvoulgaris/diastema-daas-analytics-catalogue

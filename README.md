@@ -7,11 +7,11 @@ Diastema's Data-as-a-Service component
 ├── data
 │   └── samples
 ├── src
-│   ├── dc      (Data Cleaning code)
-│   └── dl      (Data Loading  code)
+│   ├── dc (Data Cleaning code)
+│   └── dl (Data Loading  code)
 └── test
-    ├── dc      (Data Cleaning tests)
-    └── dl      (Data Loading  tests)
+    ├── dc (Data Cleaning tests)
+    └── dl (Data Loading  tests)
 ```
 
 ## License

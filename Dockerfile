@@ -4,20 +4,23 @@ FROM continuumio/miniconda3
 # Update system
 RUN apt update -y
 RUN apt upgrade -y
-
-# Create app directory and add files
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-ADD . .
-
-# Install dependencies
-RUN conda install -y --file spec-file.txt
+RUN pip install -U pip
 
 # Install Gunicorn
 RUN conda install -y gunicorn
+
+# Create and use project directory
+WORKDIR /usr/src/app
+
+# Install dependencies
+ADD spec-file.txt .
+RUN conda install -y --file spec-file.txt
+
+# Copy project files
+ADD src .
 
 # Expose ports
 EXPOSE 5000
 
 # Entrypoint
-ENTRYPOINT gunicorn --chdir src --bind 0.0.0.0:5000 app:app
+ENTRYPOINT gunicorn --bind :5000 --workers 3 app:app

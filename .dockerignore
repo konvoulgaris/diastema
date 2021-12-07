@@ -1,11 +1,2 @@
-# Visual Studio Code
-.vscode/
-
-# Data
-data/
-
 # Python
 __pycache__/
-
-# Tests
-test/

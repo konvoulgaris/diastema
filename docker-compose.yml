@@ -3,7 +3,7 @@ version: "3"
 services:
   minio:
     container_name: diastema-daas-minio
-    image: "minio/minio:latest"
+    image: minio/minio
     ports:
     - 9000:9000
     - 9001:9001
@@ -12,6 +12,7 @@ services:
   app:
     container_name: diastema-daas-app
     build: .
+    image: diastema-daas
     ports:
     - 5000:5000
     depends_on:
