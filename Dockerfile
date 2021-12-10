@@ -23,4 +23,4 @@ ADD src .
 EXPOSE 5000
 
 # Entrypoint
-ENTRYPOINT gunicorn --bind :5000 --workers 3 app:app
+ENTRYPOINT gunicorn --bind :5000 app:app
