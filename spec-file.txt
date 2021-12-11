@@ -21,7 +21,6 @@ https://repo.anaconda.com/pkgs/main/linux-64/ncurses-6.3-h7f8727e_2.conda
 https://repo.anaconda.com/pkgs/main/linux-64/openssl-1.1.1l-h7f8727e_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/xz-5.2.5-h7b6447c_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/zlib-1.2.11-h7b6447c_3.conda
-https://conda.anaconda.org/conda-forge/linux-64/libmagic-5.39-h27826a3_0.tar.bz2
 https://repo.anaconda.com/pkgs/main/linux-64/libxml2-2.9.12-h03d6c58_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/readline-8.1-h27cfd23_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/tk-8.6.11-h1ccaba5_0.conda
@@ -40,10 +39,8 @@ https://repo.anaconda.com/pkgs/main/linux-64/lxml-4.6.3-py39h9120a33_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/markupsafe-2.0.1-py39h27cfd23_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/pycparser-2.21-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/pysocks-1.7.1-py39h06a4308_0.conda
-https://conda.anaconda.org/conda-forge/linux-64/python_abi-3.9-2_cp39.tar.bz2
 https://repo.anaconda.com/pkgs/main/noarch/pytz-2021.3-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/six-1.16.0-pyhd3eb1b0_0.conda
-https://repo.anaconda.com/pkgs/main/linux-64/tabulate-0.8.9-py39h06a4308_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/wheel-0.37.0-pyhd3eb1b0_1.conda
 https://repo.anaconda.com/pkgs/main/noarch/xlrd-2.0.1-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/cffi-1.14.6-py39h400218f_0.conda
@@ -51,7 +48,6 @@ https://repo.anaconda.com/pkgs/main/noarch/jinja2-3.0.2-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/mkl-service-2.4.0-py39h7f8727e_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/openpyxl-3.0.9-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/python-dateutil-2.8.2-pyhd3eb1b0_0.conda
-https://conda.anaconda.org/conda-forge/linux-64/python-magic-0.4.24-py39hf3d152e_1.tar.bz2
 https://repo.anaconda.com/pkgs/main/linux-64/setuptools-58.0.4-py39h06a4308_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/werkzeug-2.0.2-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/brotlipy-0.7.0-py39h27cfd23_1003.conda

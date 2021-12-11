@@ -1,5 +1,8 @@
 # Visual Studio Code
 .vscode/
 
+# Data
+data/
+
 # Python
 __pycache__/

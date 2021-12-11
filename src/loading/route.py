@@ -31,7 +31,11 @@ def loading_index():
         data = g.minio.get_object(input_bucket, path).read()
         
         # Load file as DataFrame
-        df = load_file_as_dataframe(data, extension)
+        df = load_file_as_dataframe(io.BytesIO(data), extension)
+        
+        if df.empty:
+            continue
+        
         df_data = df.to_csv(index=False).encode("utf-8")
         df_name = f"{output_path}/{uuid.uuid4().hex}.csv"
         

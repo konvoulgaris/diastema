@@ -32,7 +32,9 @@ def cleaning_index():
     for f in files:
         path = f.object_name
         data = g.minio.get_object(input_bucket, path).read()
-        df = df.append(pd.read_csv(io.BytesIO(data)), ignore_index=True)
+        data_bytes = io.BytesIO(data)
+        data_bytes.seek(0)
+        df = df.append(pd.read_csv(data_bytes), ignore_index=True)
         
     df.reset_index(drop=True, inplace=True)
     
