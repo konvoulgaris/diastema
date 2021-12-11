@@ -5,8 +5,8 @@ services:
     container_name: diastema-daas-minio
     image: minio/minio
     ports:
-    - 9000:9000
-    - 9001:9001
+      - 9000:9000
+      - 9001:9001
     command: server /data --address ":9000" --console-address ":9001"
     restart: always
   app:
@@ -14,7 +14,7 @@ services:
     build: .
     image: diastema-daas
     ports:
-    - 5000:5000
+      - 5000:5000
     depends_on:
       - minio
     environment:

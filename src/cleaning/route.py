@@ -4,13 +4,13 @@ import io
 
 from flask import Blueprint, request, g
 
-from .clean import *
+from clean import drop_null, handle_object_types, handle_int_types, handle_float_types
 
-dc = Blueprint("data-cleaning", __name__)
+cleaning = Blueprint("data-cleaning", __name__)
 
 
-@dc.route("/", methods=["POST"])
-def dc_index():
+@cleaning.route("/", methods=["POST"])
+def cleaning_index():
     # Get input and output paths
     minio_input = request.form.get("minio-input", None)
     minio_output = request.form.get("minio-output", None)

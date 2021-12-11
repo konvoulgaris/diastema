@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-from .statistics import replace_outliers_with_mean
-from .utils import generate_number_not_in_list
+from statistics import replace_outliers_with_mean
+from utils import generate_number_not_in_list
 
 
 def drop_null(df: pd.DataFrame, max_shrink: float = 0.2) -> pd.DataFrame:

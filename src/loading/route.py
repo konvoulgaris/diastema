@@ -3,13 +3,13 @@ import uuid
 
 from flask import Blueprint, request, g
 
-from .files import load_file_as_dataframe
+from files import load_file_as_dataframe
 
-dl = Blueprint("data-loading", __name__)
+loading = Blueprint("data-loading", __name__)
 
 
-@dl.route("/", methods=["POST"])
-def dl_index():
+@loading.route("/", methods=["POST"])
+def loading_index():
     # Get input and output paths
     minio_input = request.form.get("minio-input", None)
     minio_output = request.form.get("minio-output", None)
