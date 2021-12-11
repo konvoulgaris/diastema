@@ -4,7 +4,7 @@ import io
 
 from flask import Blueprint, request, g
 
-from clean import drop_null, handle_object_types, handle_int_types, handle_float_types
+from .clean import drop_null, handle_object_types, handle_int_types, handle_float_types
 
 cleaning = Blueprint("data-cleaning", __name__)
 

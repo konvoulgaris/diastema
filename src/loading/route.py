@@ -3,7 +3,7 @@ import uuid
 
 from flask import Blueprint, request, g
 
-from files import load_file_as_dataframe
+from .files import load_file_as_dataframe
 
 loading = Blueprint("data-loading", __name__)
 
