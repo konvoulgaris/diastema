@@ -23,5 +23,4 @@ ADD src .
 EXPOSE 5000
 
 # Entrypoint
-# TODO: Fix timeout hack
-ENTRYPOINT gunicorn --bind :5000 --timeout 600 app:app
+ENTRYPOINT gunicorn --bind :5000 app:app
