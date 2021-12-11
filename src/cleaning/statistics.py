@@ -29,7 +29,7 @@ def replace_outliers_with_mean(df: pd.Series) -> pd.Series:
     """
     mean = y[(np.abs(zscore(y)) < 3)].mean()
     outliers = y.index[(np.abs(zscore(y)) >= 3)]
-    y.iloc[outliers] = mean
+    y.loc[outliers] = mean
     x.update(y)
     
     return x
