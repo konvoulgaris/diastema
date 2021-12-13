@@ -7,7 +7,8 @@ from flask import Flask, request, jsonify
 from minio import Minio
 
 from parse import parse_request_form, parse_file
-from file import load_file_as_dataframe
+from load import load_data_as_dataframe
+from metadata import Metadata, save_metadata
 from clean import drop_null, clean_string, clean_number
 
 HOST = os.getenv("HOST", "0.0.0.0")
@@ -26,7 +27,7 @@ try:
 except:
     print("Failed to create connection with MinIO!")
     exit(1)
-
+    
 print("Created connection with MinIO!")
 
 
@@ -40,6 +41,8 @@ def data_loading():
     files = client.list_objects(input_bucket, recursive=True)
     exports = list()
     
+    metadata = Metadata(f"Dataset", "N/A", output_path, "N/A", 0, 0, 0)
+
     for f in files:
         file_path, file_directory, file_extension = parse_file(f.object_name)
         
@@ -50,7 +53,7 @@ def data_loading():
         data = io.BytesIO(data)
         data.seek(0)
         
-        df = load_file_as_dataframe(data, file_extension)
+        df = load_data_as_dataframe(data, file_extension)
         
         if df.empty:
             print(f"- Skipping: '{input_bucket}/{file_path}'\n  Reason: Unknown file type!")
@@ -63,9 +66,15 @@ def data_loading():
         df_data.seek(0)
 
         client.put_object(output_bucket, df_name, df_data, df_length, content_type="application/csv")
-        exports.append(f"{output_bucket}/{df_name}")
 
-    return jsonify(exports)
+        exports.append(f"{output_bucket}/{df_name}")
+        metadata.samples += df.shape[0]
+        metadata.features += df.shape[1]
+        metadata.size += df.memory_usage(deep=True).sum()
+
+    save_metadata(metadata)
+
+    return jsonify({"loaded": exports, "metadata": metadata.to_dict()})
 
 
 @app.route("/data-cleaning", methods=["POST"])
@@ -90,7 +99,7 @@ def data_cleaning():
         data = io.BytesIO(data)
         data.seek(0)
         
-        df = load_file_as_dataframe(data, file_extension)
+        df = load_data_as_dataframe(data, file_extension)
         
         if df.empty:
             print(f"- Skipping: '{input_bucket}/{file_path}'\n  Reason: Unknown file type!")

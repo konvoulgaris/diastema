@@ -9,14 +9,26 @@ services:
       - 9001:9001
     command: server /data --address ":9000" --console-address ":9001"
     restart: always
+  mongodb:
+    container_name: diastema-daas-mongodb
+    image: mongo
+    ports:
+      - 27017:27017
+    restart: always
   app:
     container_name: diastema-daas-app
-    build: .
-    image: diastema-daas
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    image: diastema-daas:dev
     ports:
       - 5000:5000
-    depends_on:
-      - minio
+    volumes:
+      - ./src:/app/src
     environment:
       - MINIO_HOST=diastema-daas-minio
+      - MONGODB_HOST=diastema-daas-mongodb
+    depends_on:
+      - minio
+      - mongodb
     restart: always

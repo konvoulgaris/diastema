@@ -34,6 +34,7 @@ https://repo.anaconda.com/pkgs/main/noarch/itsdangerous-2.0.1-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/joblib-1.1.0-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/markupsafe-2.0.1-py39h27cfd23_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/pycparser-2.21-pyhd3eb1b0_0.conda
+https://repo.anaconda.com/pkgs/main/linux-64/pymongo-3.12.0-py39h295c915_0.conda
 https://repo.anaconda.com/pkgs/main/linux-64/pysocks-1.7.1-py39h06a4308_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/pytz-2021.3-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/six-1.16.0-pyhd3eb1b0_0.conda
