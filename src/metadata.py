@@ -3,11 +3,11 @@ import datetime
 
 from pymongo import MongoClient
 
-MONGODB_HOST = os.getenv("MONGODB_HOST", "0.0.0.0")
-MONGODB_PORT = int(os.getenv("MONGODB_PORT", 27017))
+MONGO_HOST = os.getenv("MONGO_HOST", "0.0.0.0")
+MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))
 
-# Create and test MongoDB connection
-client = MongoClient(MONGODB_HOST, MONGODB_PORT)
+# Create and test Mongo connection
+client = MongoClient(MONGO_HOST, MONGO_PORT)
 
 try:
     client.server_info()

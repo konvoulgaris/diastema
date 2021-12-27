@@ -1,34 +1,32 @@
 version: "3"
 
 services:
-  minio:
-    container_name: diastema-daas-minio
-    image: minio/minio
-    ports:
-      - 9000:9000
-      - 9001:9001
-    command: server /data --address ":9000" --console-address ":9001"
-    restart: always
   mongodb:
     container_name: diastema-daas-mongodb
     image: mongo
     ports:
-      - 27017:27017
+      - 5001:27017
     restart: always
-  app:
-    container_name: diastema-daas-app
+  minio:
+    container_name: diastema-daas-minio
+    image: minio/minio
+    ports:
+      - 5002:9000
+      - 5003:9001
+    command: server /data --address ":9000" --console-address ":9001"
+    restart: always
+  flask:
+    container_name: diastema-daas-flask
     build:
       context: .
       dockerfile: ./Dockerfile.dev
     image: diastema-daas:dev
     ports:
       - 5000:5000
-    volumes:
-      - ./src:/app/src
     environment:
+      - MONGO_HOST=diastema-daas-mongodb
       - MINIO_HOST=diastema-daas-minio
-      - MONGODB_HOST=diastema-daas-mongodb
     depends_on:
-      - minio
       - mongodb
+      - minio
     restart: always
