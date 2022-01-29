@@ -1,25 +1,6 @@
 import os
 import datetime
 
-from pymongo import MongoClient
-
-MONGO_HOST = os.getenv("MONGO_HOST", "0.0.0.0")
-MONGO_PORT = int(os.getenv("MONGO_PORT", 27017))
-
-# Create and test Mongo connection
-client = MongoClient(MONGO_HOST, MONGO_PORT)
-
-try:
-    client.server_info()
-except:
-    print("Failed to create MongoDB connection!")
-    exit(1)
-    
-db = client["DaaS"]["Metadata"]
-
-print("Created MongoDB connection!")
-
-
 class Metadata:
     def __init__(self, name: str, source: str, location: str, usecase: str, features: int, samples: int, size: int, created_at: datetime.datetime=datetime.datetime.utcnow()):
         """
@@ -91,21 +72,3 @@ class Metadata:
         self.size       = data["size"]
         self.created_at = data["created_at"]
         self.updated_at = data["updated_at"]
-
-
-def save_metadata(metadata: Metadata):
-    """
-    Saves metadata to MongoDB
-
-    Parameters
-    ----------
-    metadata : Metadata
-        The metadata that will be saved
-    """
-    match = db.find_one({"name": metadata.name})
-    
-    if match:
-        metadata.created_at = match["created_at"]
-        db.update_one({"_id": match["_id"]}, {"$set": metadata.to_dict()})
-    else:
-        db.insert_one(metadata.to_dict())
