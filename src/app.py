@@ -74,7 +74,7 @@ def data_loading(data):
         metadata.features += df.shape[1]
         metadata.size += df.memory_usage(deep=True).sum()
 
-    emit("data-loading-done", {"loaded": exports, "metadata": metadata.to_dict(), "job-id": data.get("job-id")})
+    emit("data-loading-done", {"loaded": exports, "metadata": metadata.to_dict(), "job-id": dict(data).get("job-id")})
 
 
 @socket.on("data-cleaning")
@@ -120,7 +120,7 @@ def data_cleaning(data):
 
     client.put_object(output_bucket, df_name, df_data, df_length, content_type="application/csv")
 
-    emit("data-cleaning-done", {"job-id": data.get("job-id")})
+    emit("data-cleaning-done", {"job-id": dict(data).get("job-id")})
 
 if __name__ == "__main__":
     app.run(HOST, PORT, True)
