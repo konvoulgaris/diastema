@@ -36,8 +36,7 @@ print("Created connection with MinIO!")
 
 @socket.on("data-loading")
 def data_loading(data):
-    data_dict = json.loads(data)
-    input_bucket, input_path, output_bucket, output_path = parse_data_dict(data_dict)
+    input_bucket, input_path, output_bucket, output_path = parse_data_dict(data)
 
     if not input_bucket:
         emit("data-loading-error", {"error": "Missing data"})
@@ -75,19 +74,18 @@ def data_loading(data):
         metadata.features += df.shape[1]
         metadata.size += df.memory_usage(deep=True).sum()
 
-    emit("data-loading-done", {"loaded": exports, "metadata": metadata.to_dict(), "job-id": data_dict.get("job-id")})
+    emit("data-loading-done", {"loaded": exports, "metadata": metadata.to_dict(), "job-id": data.get("job-id")})
 
 
 @socket.on("data-cleaning")
 def data_cleaning(data):
-    data_dict = json.loads(data)
-    input_bucket, input_path, output_bucket, output_path = parse_data_dict(data_dict)
+    input_bucket, input_path, output_bucket, output_path = parse_data_dict(data)
 
     if not input_bucket:
         emit("data-cleaning-error", {"error": "Missing data"})
         return
 
-    max_shrink = float(data_dict.get("max-shrink", 0.2))
+    max_shrink = float(data.get("max-shrink", 0.2))
 
     files = client.list_objects(input_bucket, recursive=True)
     dfs = list()
@@ -122,7 +120,7 @@ def data_cleaning(data):
 
     client.put_object(output_bucket, df_name, df_data, df_length, content_type="application/csv")
 
-    emit("data-cleaning-done", {"job-id": data_dict.get("job-id")})
+    emit("data-cleaning-done", {"job-id": data.get("job-id")})
 
 if __name__ == "__main__":
     app.run(HOST, PORT, True)
