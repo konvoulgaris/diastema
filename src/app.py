@@ -5,7 +5,7 @@ import pandas as pd
 import json
 
 from flask import Flask
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 from minio import Minio
 
 from parse import parse_data_dict, parse_file
@@ -40,7 +40,7 @@ def data_loading(data):
     input_bucket, input_path, output_bucket, output_path = parse_data_dict(data_dict)
 
     if not input_bucket:
-        socket.emit("data-loading-error", {"error": "Missing data"})
+        emit("data-loading-error", {"error": "Missing data"})
         return
 
     files = client.list_objects(input_bucket, recursive=True)
@@ -75,7 +75,7 @@ def data_loading(data):
         metadata.features += df.shape[1]
         metadata.size += df.memory_usage(deep=True).sum()
 
-    socket.emit("data-loading-done", {"loaded": exports, "metadata": metadata.to_dict(), "job-id": data_dict.get("job-id")})
+    emit("data-loading-done", {"loaded": exports, "metadata": metadata.to_dict(), "job-id": data_dict.get("job-id")})
 
 
 @socket.on("data-cleaning")
@@ -84,7 +84,7 @@ def data_cleaning(data):
     input_bucket, input_path, output_bucket, output_path = parse_data_dict(data_dict)
 
     if not input_bucket:
-        socket.emit("data-cleaning-error", {"error": "Missing data"})
+        emit("data-cleaning-error", {"error": "Missing data"})
         return
 
     max_shrink = float(data_dict.get("max-shrink", 0.2))
@@ -122,7 +122,7 @@ def data_cleaning(data):
 
     client.put_object(output_bucket, df_name, df_data, df_length, content_type="application/csv")
 
-    socket.emit("data-cleaning-done", {"job-id": data_dict.get("job-id")})
+    emit("data-cleaning-done", {"job-id": data_dict.get("job-id")})
 
 if __name__ == "__main__":
     app.run(HOST, PORT, True)
