@@ -8,7 +8,7 @@ from flask import Flask
 from flask_socketio import SocketIO
 from minio import Minio
 
-from parse import parse_data_dict, parse_request_form, parse_file
+from parse import parse_data_dict, parse_file
 from load import load_data_as_dataframe
 from metadata import Metadata, save_metadata
 from clean import drop_null, clean_string, clean_number
