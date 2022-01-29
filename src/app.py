@@ -10,7 +10,7 @@ from minio import Minio
 
 from parse import parse_data_dict, parse_file
 from load import load_data_as_dataframe
-from metadata import Metadata, save_metadata
+from metadata import Metadata
 from clean import drop_null, clean_string, clean_number
 
 HOST = os.getenv("HOST", "0.0.0.0")
@@ -74,8 +74,6 @@ def data_loading(data):
         metadata.samples += df.shape[0]
         metadata.features += df.shape[1]
         metadata.size += df.memory_usage(deep=True).sum()
-
-    save_metadata(metadata)
 
     socket.emit("data-loading-done", {"loaded": exports, "metadata": metadata.to_dict(), "job-id": data_dict.get("job-id")})
 
