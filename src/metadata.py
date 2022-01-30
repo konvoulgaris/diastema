@@ -42,15 +42,15 @@ class Metadata:
             The resulting dict
         """
         return {
-                "name": self.name,
-              "source": self.source,
-            "location": self.location,
-             "usecase": self.usecase,
+                "name": str(self.name),
+              "source": str(self.source),
+            "location": str(self.location),
+             "usecase": str(self.usecase),
             "features": int(self.features),
              "samples": int(self.samples),
                 "size": int(self.size),
-          "created_at": self.created_at,
-          "updated_at": self.updated_at
+          "created_at": str(self.created_at),
+          "updated_at": str(self.updated_at)
         }
     
     

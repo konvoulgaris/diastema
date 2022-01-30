@@ -8,7 +8,7 @@ from flask import Flask
 from flask_socketio import SocketIO, emit
 from minio import Minio
 
-from parse import parse_data_dict, parse_file
+from parse import get_max_shrink, parse_data_dict, parse_file
 from load import load_data_as_dataframe
 from metadata import Metadata
 from clean import drop_null, clean_string, clean_number
@@ -21,7 +21,7 @@ MINIO_USER = os.getenv("MINIO_USER", "minioadmin")
 MINIO_PASS = os.getenv("MINIO_PASS", "minioadmin")
 
 app = Flask(__name__)
-socket = SocketIO(app)
+socket = SocketIO(app, cors_allowed_origins="*")
 
 client = Minio(f"{MINIO_HOST}:{MINIO_PORT}", access_key=MINIO_USER, secret_key=MINIO_PASS, secure=False)
 
@@ -36,9 +36,7 @@ print("Created connection with MinIO!")
 
 @socket.on("data-loading")
 def data_loading(data):
-    data.seek(0)
-    data_dict = json.loads(data.read())
-    input_bucket, input_path, output_bucket, output_path = parse_data_dict(data_dict)
+    input_bucket, input_path, output_bucket, output_path, job_id = parse_data_dict(data)
 
     if not input_bucket:
         emit("data-loading-error", {"error": "Missing data"})
@@ -76,20 +74,18 @@ def data_loading(data):
         metadata.features += df.shape[1]
         metadata.size += df.memory_usage(deep=True).sum()
 
-    emit("data-loading-done", {"loaded": exports, "metadata": metadata.to_dict(), "job-id": data_dict.get("job-id")})
+    emit("data-loading-done", {"loaded": exports, "metadata": metadata.to_dict(), "job-id": job_id})
 
 
 @socket.on("data-cleaning")
 def data_cleaning(data):
-    data.seek(0)
-    data_dict = json.loads(data.read())
-    input_bucket, input_path, output_bucket, output_path = parse_data_dict(data_dict)
+    input_bucket, input_path, output_bucket, output_path, job_id = parse_data_dict(data)
 
     if not input_bucket:
         emit("data-cleaning-error", {"error": "Missing data"})
         return
 
-    max_shrink = float(data_dict.get("max-shrink", 0.2))
+    max_shrink = get_max_shrink(data)
 
     files = client.list_objects(input_bucket, recursive=True)
     dfs = list()
@@ -124,7 +120,7 @@ def data_cleaning(data):
 
     client.put_object(output_bucket, df_name, df_data, df_length, content_type="application/csv")
 
-    emit("data-cleaning-done", {"job-id": data_dict.get("job-id")})
+    emit("data-cleaning-done", {"job-id": job_id})
 
 if __name__ == "__main__":
-    app.run(HOST, PORT, True)
+    socket.run(app, HOST, PORT)
