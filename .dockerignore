@@ -1,20 +1,3 @@
 # Python
 .venv/
 __pycache__/
-
-# Docker
-.dockerignore
-Dockerfile*
-docker-compose.yml
-
-# Git
-.git/
-.gitignore
-LICENSE
-README.md
-
-# GitHub
-.github/
-
-# Visual Studio Code
-.vscode/

@@ -19,10 +19,10 @@ def parse_data_dict(data_dict: dict()) -> Tuple[str, str, str, str, str]:
 
 def get_max_shrink(data_dict: dict()) -> float:
     max_shrink = data_dict.get("max-shrink")
-    
+
     if not max_shrink:
         max_shrink = 0.2
-        
+
     return max_shrink
 
 
