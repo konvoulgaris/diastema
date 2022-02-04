@@ -72,18 +72,24 @@ def data_loading_callback(ch, method, properties, body):
         metadata.features += df.shape[1]
         metadata.size += df.memory_usage(deep=True).sum()
 
-    mongo.update_one({"job-id": job_id}, {
-        "$set": {
-            "status": "complete",
-            "result": json.dumps({
-                "job-id": job_id,
-                "loaded": exports,
-                "metadata": metadata.to_dict()
-            })
-        }
-    })
+    match = mongo.find_one({"job-id": job_id})
 
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+    if match:
+        result = json.dumps({
+                    "job-id": job_id,
+                    "loaded": exports,
+                    "metadata": metadata.to_dict()
+                })
+        mongo.update_one({"_id": match["_id"]}, {
+            "$set": {
+                "status": "complete",
+                "result": result
+            }
+        })
+
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+    else:
+        print(f"{job_id} data loading error")
 
 
 def data_cleaning_callback(ch, method, properties, body):
@@ -126,13 +132,19 @@ def data_cleaning_callback(ch, method, properties, body):
     df_data.seek(0)
 
     minio.put_object(output_bucket, df_name, df_data, df_length, content_type="application/csv")
-    
-    mongo.update_one({"job-id": job_id}, {"$set": {
-        "status": "complete",
-        "result": json.dumps({"job-id": job_id})
-    }})
 
-    ch.basic_ack(delivery_tag=method.delivery_tag)
+    match = mongo.find_one({"job-id": job_id})
+
+    if match:
+        result = json.dumps({"job-id": job_id})
+        mongo.update_one({"job-id": job_id}, {"$set": {
+            "status": "complete",
+            "result": result
+        }})
+
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+    else:
+        print(f"{job_id} data cleaning error")
 
 
 channel.basic_qos(prefetch_count=1)

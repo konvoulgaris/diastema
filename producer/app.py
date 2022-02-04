@@ -37,13 +37,13 @@ def data_loading():
     if match:
         return "Job ID already exists", 400
     else:
+        collection.insert_one({"job-id": job, "status": "progress", "result": ""})
+
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
         channel = connection.channel()
         channel.queue_declare(queue="data_loading", durable=True)
         channel.basic_publish(exchange="", routing_key="data_loading", body=request.data, properties=pika.BasicProperties(delivery_mode=2))
         connection.close()
-
-        collection.insert_one({"job-id": job, "status": "progress", "result": ""})
 
         return f"Data loading for job {job} in progress", 200
 
@@ -85,13 +85,13 @@ def data_cleaning():
     if match:
         return "Job ID already exists", 400
     else:
+        collection.insert_one({"job-id": job, "status": "progress", "result": ""})
+
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
         channel = connection.channel()
         channel.queue_declare(queue="data_cleaning", durable=True)
         channel.basic_publish(exchange="", routing_key="data_cleaning", body=request.data, properties=pika.BasicProperties(delivery_mode=2))
         connection.close()
-
-        collection.insert_one({"job-id": job, "status": "progress", "result": ""})
 
         return f"Data cleaning for job {job} in progress", 200
 
