@@ -72,7 +72,16 @@ def data_loading_callback(ch, method, properties, body):
         metadata.features += df.shape[1]
         metadata.size += df.memory_usage(deep=True).sum()
 
-    mongo.update_one({"job-id": job_id}, {"$set": {"status": "complete", "result": json.dumps({"job-id": job_id, "loaded": exports, "metadata": metadata.to_dict()})}})
+    mongo.update_one({"job-id": job_id}, {
+        "$set": {
+            "status": "complete",
+            "result": json.dumps({
+                "job-id": job_id,
+                "loaded": exports,
+                "metadata": metadata.to_dict()
+            })
+        }
+    })
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -118,7 +127,10 @@ def data_cleaning_callback(ch, method, properties, body):
 
     minio.put_object(output_bucket, df_name, df_data, df_length, content_type="application/csv")
     
-    mongo.update_one({"job-id": job_id}, {"$set": {"status": "complete", "result": json.dumps({"job-id": job_id})}})
+    mongo.update_one({"job-id": job_id}, {"$set": {
+        "status": "complete",
+        "result": json.dumps({"job-id": job_id})
+    }})
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
 

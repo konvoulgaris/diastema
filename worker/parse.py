@@ -4,7 +4,7 @@ from typing import Tuple
 def parse_data_dict(data_dict: dict()) -> Tuple[str, str, str, str, str]:
     minio_input = data_dict.get("minio-input")
     minio_output = data_dict.get("minio-output")
-    job_id = data_dict.get("job-id")
+    job_id = str(data_dict.get("job-id"))
 
     if not (minio_input and minio_output and job_id):
         return (None, None, None, None, None)
