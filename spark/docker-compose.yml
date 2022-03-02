@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  minio:
+    container_name: diastema-daas-analytics-catalogue-minio
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: server /data --address ":9000" --console-address ":9001"
+    restart: always
+  app:
+    container_name: diastema-daas-analytics-catalogue-app
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    image: diastema-daas-analytics-catalogue:dev
+    ports:
+      - 5000:5000
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - minio
+    environment:
+      - MINIO_HOST=diastema-daas-analytics-catalogue-minio
+    command: tail -F random
+    restart: always
