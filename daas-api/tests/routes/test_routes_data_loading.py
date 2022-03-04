@@ -39,3 +39,50 @@ def test_routes_data_loading_index(test_client: FlaskClient):
     assert match
 
     db.close()
+
+
+@mongomock.patch(servers=(("0.0.0.0", 27017), ))
+def test_routes_data_loading_progress(test_client: FlaskClient):
+    # Test missing ID
+    res = test_client.get("/data-loading/progress", follow_redirects=True)
+    assert res.status_code == 400
+    assert res.data == b"Missing ID argument"
+
+    # Test invalid ID
+    query = { "id": "1" }
+    res = test_client.get("/data-loading/progress", follow_redirects=True,
+                          query_string=query)
+    assert res.status_code == 404
+    assert res.data == b"Job ID doesn't exist"
+
+    # Test valid
+    data = { "job-id": query["id"], "status": "progress", "result": "" }
+    db = get_db_connection()
+    collection = db["Diastema"]["DataLoading"]
+    collection.insert_one(data)
+    db.close()
+
+    res = test_client.get("/data-loading/progress", follow_redirects=True,
+                          query_string=query)
+    assert res.status_code == 200
+    assert res.data == b"progress"
+
+
+@mongomock.patch(servers=(("0.0.0.0", 27017), ))
+def test_routes_data_loading_job(test_client: FlaskClient):
+    # Test missing ID
+    job = "1"
+    res = test_client.get(f"/data-loading/{job}", follow_redirects=True)
+    assert res.status_code == 404
+    assert res.data == b"Job ID doesn't exist"
+
+    # Test valid
+    data = { "job-id": job, "status": "complete", "result": "test" }
+    db = get_db_connection()
+    collection = db["Diastema"]["DataLoading"]
+    collection.insert_one(data)
+    db.close()
+
+    res = test_client.get(f"/data-loading/{job}", follow_redirects=True)
+    assert res.status_code == 200
+    assert res.data == b"test"

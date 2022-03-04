@@ -11,6 +11,6 @@ def get_db_connection(host=MONGO_HOST, port=MONGO_PORT) -> pymongo.MongoClient:
     try:
         client.server_info()
     except:
-        raise Exception("Failed to get Mongo connection!")
+        raise Exception("Failed to get DB connection!")
 
     return client
