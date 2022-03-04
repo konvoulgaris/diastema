@@ -12,6 +12,6 @@ def test_db_get_db_connection_success():
         pytest.fail()
 
 
-# def test_db_get_db_connection_failure():
-#     with pytest.raises(Exception):
-#         get_db_connection(port=1)
+def test_db_get_db_connection_failure():
+    with pytest.raises(Exception):
+        get_db_connection(port=1)
