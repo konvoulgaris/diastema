@@ -17,7 +17,7 @@ def send_message(key: str, message: str, host=RABBITMQ_HOST,
         channel.basic_publish(exchange="", routing_key=key, body=message,
                               properties=pika.BasicProperties(
                                     content_type="application/json",
-                                    delivery_mode=1
+                                    delivery_mode=2
                               ), mandatory=True)
     except:
         raise Exception("Failed to send message!")

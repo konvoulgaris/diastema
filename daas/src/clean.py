@@ -35,7 +35,9 @@ def clean_string(df: pd.DataFrame) -> pd.DataFrame:
 
 def clean_number(df: pd.DataFrame) -> pd.DataFrame:
     x = df.copy(deep=True)
-    columns = x.select_dtypes(include=['int16', 'int32', 'int64', 'float16', 'float32', 'float64']).columns.tolist()
+    columns = x.select_dtypes(include=[ 
+        "int16", "int32", "int64", "float16", "float32", "float64"
+    ]).columns.tolist()
     
     for c in columns:
         temp = x[c]

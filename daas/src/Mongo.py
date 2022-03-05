@@ -1,7 +1,5 @@
 from pymongo import MongoClient
 
-class MongoException(Exception):
-    pass
 
 class Mongo(MongoClient):
     def __init__(self, host, port):
@@ -14,4 +12,4 @@ class Mongo(MongoClient):
         try:
             self.server_info()
         except:
-            raise MongoException("Failed to connect to Mongo")
+            raise Exception("Failed to connect to Mongo")

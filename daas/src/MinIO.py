@@ -1,7 +1,5 @@
 from minio import Minio
 
-class MinIOException(Exception):
-    pass
 
 class MinIO(Minio):
     def __init__(self, host, port, username, password):
@@ -16,4 +14,4 @@ class MinIO(Minio):
         try:
             self.list_buckets()
         except:
-            raise MinIOException("Failed to connect to MinIO")
+            raise Exception("Failed to connect to MinIO")

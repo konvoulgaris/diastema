@@ -2,8 +2,8 @@ import json
 
 from flask import Blueprint, request
 
-from utils.db import get_db_connection
-from utils.message import send_message
+from app.utils.db import get_db_connection
+from app.utils.message import send_message
 
 data_loading = Blueprint("data-loading", __name__)
 

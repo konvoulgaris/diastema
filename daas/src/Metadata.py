@@ -1,5 +1,5 @@
-import os
 import datetime
+
 
 class Metadata:
     def __init__(self, name: str, source: str, location: str, usecase: str, features: int, samples: int, size: int, created_at: datetime.datetime=datetime.datetime.utcnow()):
