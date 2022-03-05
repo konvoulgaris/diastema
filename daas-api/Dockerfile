@@ -1,9 +1,9 @@
-FROM python:3.8-alpine
+FROM python:3.8
 
 EXPOSE 5000
 
-RUN apk update
-RUN apk upgrade --available
+RUN apt update -y
+RUN apt upgrade -y
 RUN pip install --upgrade pip
 RUN pip install gunicorn
 

@@ -10,7 +10,7 @@ def test_utils_message_send_message_sucess():
         pytest.fail()
 
 
-def test_utils_message_send_message_sucess():
+def test_utils_message_send_message_failure():
     with pytest.raises(Exception):
         send_message("test", "Hello", port=1)
 
