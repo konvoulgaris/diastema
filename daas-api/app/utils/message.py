@@ -2,7 +2,7 @@ import os
 import pika
 
 RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "0.0.0.0")
-RABBITMQ_PORT = int(os.getenv("RABBITMQ_POTR", 5672))
+RABBITMQ_PORT = int(os.getenv("RABBITMQ_PORT", 5672))
 
 
 def send_message(key: str, message: str, host=RABBITMQ_HOST,
