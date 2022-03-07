@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  rabbitmq:
+    container_name: daas-rabbitmq
+    image: rabbitmq
+    ports:
+      - 5672:5672
+    restart: always
+  mongo:
+    container_name: daas-mongo
+    image: mongo
+    ports:
+      - 27017:27017
+    restart: always
+  api:
+    container_name: daas-api
+    image: konvoulgaris/diastema-daas-api
+    ports:
+      - 5000:5000
+    depends_on:
+      - rabbitmq
+      - mongo
+    environment:
+      - RABBITMQ_HOST=daas-rabbitmq
+      - MONGO_HOST=daas-mongo
+    restart: always

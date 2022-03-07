@@ -3,14 +3,12 @@ import requests
 import os
 import io
 
-from typing import Optional
-
 from MinIO import MinIO
 
 CHUNK_SIZE = 4096
 
 
-def download(url: str, path="/tmp", name=uuid.uuid4().hex) -> Optional[str]:
+def download(url: str, path="/tmp", name=uuid.uuid4().hex) -> str:
     print(f"Starting {url} download")
 
     f_name = os.path.join(path, name)
@@ -28,9 +26,6 @@ def download(url: str, path="/tmp", name=uuid.uuid4().hex) -> Optional[str]:
     print(f"{f_name} downloaded")
 
     return f_name
-
-
-
 
 
 def upload(file_path: str, minio: MinIO, minio_output: str):
