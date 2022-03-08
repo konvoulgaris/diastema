@@ -11,7 +11,8 @@ CHUNK_SIZE = 4096
 def download(url: str, path="/tmp", name=uuid.uuid4().hex) -> str:
     print(f"Starting {url} download")
 
-    f_name = os.path.join(path, name)
+    extension = url.split(".")[-1]
+    f_name = os.path.join(path, f"{name}.{extension}")
 
     try:
         with requests.get(url, stream=True) as r:
