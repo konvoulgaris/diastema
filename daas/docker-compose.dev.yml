@@ -13,6 +13,14 @@ services:
     ports:
       - 27017:27017
     restart: always
+  minio:
+    container_name: daas-minio
+    image: minio/minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    command: server /data --address ":9000" --console-address ":9001"
+    restart: always
   api:
     container_name: daas-api
     image: konvoulgaris/diastema-daas-api
