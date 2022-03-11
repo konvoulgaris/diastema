@@ -3,6 +3,7 @@ from flask import Flask
 from .routes.data_ingesting import data_ingesting
 from .routes.data_loading import data_loading
 from .routes.data_cleaning import data_cleaning
+from .routes.data_sink import data_sink
 
 
 def create_app():
@@ -12,6 +13,7 @@ def create_app():
         app.register_blueprint(data_ingesting, url_prefix="/data-ingesting")
         app.register_blueprint(data_loading, url_prefix="/data-loading")
         app.register_blueprint(data_cleaning, url_prefix="/data-cleaning")
+        app.register_blueprint(data_sink, url_prefix="/data-sink")
 
 
         @app.route("/", methods=["GET"])
