@@ -12,6 +12,8 @@ from parse import get_max_shrink, parse_data_dict, parse_file
 from ingest import download, upload
 from load import load_data_as_dataframe
 from clean import drop_null, clean_string, clean_number
+from join import join
+
 
 RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "0.0.0.0")
 RABBITMQ_PORT = int(os.getenv("RABBITMQ_PORT", 5672))
@@ -27,6 +29,7 @@ channel = connection.channel()
 channel.queue_declare(queue="data-ingesting", durable=True)
 channel.queue_declare(queue="data-loading", durable=True)
 channel.queue_declare(queue="data-cleaning", durable=True)
+channel.queue_declare(queue="join", durable=True)
 
 print("connected...")
 
@@ -198,8 +201,51 @@ def data_cleaning_callback(ch, method, properties, body):
     print(f"Data cleaning job {job_id} started")
 
 
+def join_callback(ch, method, properties, body):
+    print("Join job received")
+
+    data = json.loads(body.decode())
+    mongo = Mongo(MONGO_HOST, MONGO_PORT)["Diastema"]["Join"]
+    minio = MinIO(MINIO_HOST, MINIO_PORT, MINIO_USER, MINIO_PASS)
+
+    print(data)
+
+    column = data.get("column")
+    join_type = data.get("type")
+    inputs = data.get("inputs")
+    output = data.get("output")
+    job_id = str(data.get("job-id"))
+
+    print(f"Join job {job_id} started")
+
+    try:
+        join(minio, inputs, column, join_type, output)
+    except Exception as e:
+        print(e)
+        print(f"{job_id} Join error")
+
+    result = json.dumps({
+        "job-id": job_id,
+        "output": output,
+    })
+
+    match = mongo.find_one({"job-id": job_id})
+
+    mongo.update_one({"_id": match["_id"]}, {
+        "$set": {
+            "status": "complete",
+            "result": result
+        }
+    })
+
+    ch.basic_ack(delivery_tag=method.delivery_tag)
+
+    print(f"Join job {job_id} completed")
+
+
 channel.basic_qos(prefetch_count=1)
 channel.basic_consume(queue="data-ingesting", on_message_callback=data_ingesting_callback)
 channel.basic_consume(queue="data-loading", on_message_callback=data_loading_callback)
 channel.basic_consume(queue="data-cleaning", on_message_callback=data_cleaning_callback)
+channel.basic_consume(queue="join", on_message_callback=join_callback)
 channel.start_consuming()
