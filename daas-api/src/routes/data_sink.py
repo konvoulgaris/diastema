@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, request
 
-from app.utils.sink import sink_data
+from utils.sink import sink_data
 
 data_sink = Blueprint("data-sink", __name__)
 

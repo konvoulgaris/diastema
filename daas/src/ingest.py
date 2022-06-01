@@ -2,31 +2,45 @@ import uuid
 import requests
 import os
 import io
+import pandas as pd
+from Metadata import Metadata, get_metadata_of_df
 
 from MinIO import MinIO
+from requests.auth import HTTPBasicAuth
+from load import load_file_as_dataframe
+from typing import Tuple
 
 CHUNK_SIZE = 4096
 
 
-def download(url: str, path="/tmp", name=uuid.uuid4().hex) -> str:
+def download(url: str, token: str, path="/tmp", name=uuid.uuid4().hex) -> Tuple[str, Metadata]:
     print(f"Starting {url} download")
 
     extension = url.split(".")[-1]
     f_name = os.path.join(path, f"{name}.{extension}")
 
+    if token == "":
+        auth = HTTPBasicAuth("apikey", token)
+    else:
+        auth = None
+
     try:
-        with requests.get(url, stream=True) as r:
+        with requests.get(url, auth=auth, stream=True) as r:
             r.raise_for_status()
             with open(f_name, "wb") as f:
                 for c in r.iter_content(chunk_size=CHUNK_SIZE):
                     f.write(c)
     except Exception as e:
+        print("Failed to download")
         print(e)
         raise Exception("Failed to download!")
 
+    df = load_file_as_dataframe(f_name)
+    metadata = get_metadata_of_df(df)
+
     print(f"{f_name} downloaded")
 
-    return f_name
+    return f_name, metadata
 
 
 def upload(file_path: str, minio: MinIO, minio_output: str):

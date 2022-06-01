@@ -11,6 +11,6 @@ WORKDIR /app
 ADD requirements.txt .
 RUN pip install -r requirements.txt
 
-ADD src src
+ADD src .
 
-ENTRYPOINT python src/worker.py
+ENTRYPOINT python worker.py

@@ -46,18 +46,22 @@ def data_ingesting_callback(ch, method, properties, body):
     token = data.get("token")
     minio_output = data.get("minio-output")
     job_id = str(data.get("job-id"))
+    md = Metadata("Dataset", "N/A", minio_output, "N/A", 0, 0, 0)
 
     print(f"Data ingesting job {job_id} started")
 
     try:
-        f_name = download(url)
+        f_name, md = download(url, token)
         upload(f_name, minio, minio_output)
-    except:
+    except Exception as ex:
         print(f"{job_id} data ingesting error")
+        print(ex)
+        return
 
     result = json.dumps({
         "job-id": job_id,
         "ingested": minio_output,
+        "features": md.features
     })
 
     match = mongo.find_one({"job-id": job_id})
@@ -85,7 +89,7 @@ def data_loading_callback(ch, method, properties, body):
 
     files = minio.list_objects(input_bucket, recursive=True)
     exports = list()
-    metadata = Metadata(f"Dataset", "N/A", output_path, "N/A", 0, 0, 0)
+    metadata = Metadata([], "Dataset", "N/A", output_path, "N/A", 0, 0, 0)
 
     print(f"Data loading job {job_id} started")
 
@@ -114,7 +118,7 @@ def data_loading_callback(ch, method, properties, body):
         exports.append(f"{output_bucket}/{df_name}")
 
         metadata.samples += df.shape[0]
-        metadata.features += df.shape[1]
+        metadata.features = df.columns
         metadata.size += df.memory_usage(deep=True).sum()
 
     match = mongo.find_one({"job-id": job_id})
@@ -133,6 +137,7 @@ def data_loading_callback(ch, method, properties, body):
         })
     else:
         print(f"{job_id} data loading error")
+        return
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -195,6 +200,7 @@ def data_cleaning_callback(ch, method, properties, body):
 
     else:
         print(f"{job_id} data cleaning error")
+        return
 
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -220,9 +226,10 @@ def join_callback(ch, method, properties, body):
 
     try:
         join(minio, inputs, column, join_type, output)
-    except Exception as e:
-        print(e)
-        print(f"{job_id} Join error")
+    except Exception as ex:
+        print(f"{job_id} join error")
+        print(ex)
+        return
 
     result = json.dumps({
         "job-id": job_id,

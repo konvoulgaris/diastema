@@ -12,7 +12,6 @@ WORKDIR /app
 ADD requirements.txt .
 RUN pip install -r requirements.txt
 
-ADD wsgi.py .
-ADD app app
+ADD src .
 
 ENTRYPOINT gunicorn --bind :5000 wsgi:wsgi

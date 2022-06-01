@@ -2,8 +2,8 @@ import json
 
 from flask import Blueprint, request
 
-from app.utils.db import get_db_connection
-from app.utils.message import send_message
+from utils.db import get_db_connection
+from utils.message import send_message
 
 join = Blueprint("join", __name__)
 
